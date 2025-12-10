@@ -56,34 +56,39 @@ To translate the abstract logic of Binary Search into this interactive tool, I a
 I broke the algorithm down into distinct stages that map directly to the code components:
 1.  **Input & Validation:** Parsing the comma-separated string, converting to integers, and handling errors (e.g., empty input).
 2.  **Initialization:** Sorting the list and setting initial pointers (`low`, `high`, `mid`).
-3.  **Calculation:** Computing the midpoint: `mid = (low + high) // 2`.
+3.  **Calculation:** Computing the midpoint: $mid = (low + high) // 2$.
 4.  **Comparison:** Evaluating if `arr[mid]` is equal to, less than, or greater than the target.
-5.  **Termination:** Deciding whether to return a success index, discard a half, or declare the item "not found."
+5.  **Termination:** Deciding whether to return a success index, discard a half, or declare the item "not found".
 
 ### Pattern Recognition
 The algorithm relies on a repeating pattern that occurs regardless of list size:
 > *Calculate Mid $\rightarrow$ Compare to Target $\rightarrow$ Discard Half $\rightarrow$ Repeat.*
 
-In my app, the **"Next Step"** button triggers exactly one iteration of this pattern. Whether the list has 10 items or 10,000, this same cycle repeats until the end condition is met. This reinforces the concept of a loop to the user.
+In my app, the **"Next Step"** button triggers exactly one iteration of this pattern. This reinforces the concept of a loop, and the user sees the new midpoint highlighted and half the list faded on every click.
 
 ### Abstraction
 I consciously chose what to show and what to hide to avoid overwhelming the user:
 * **Shown (User Model):** The list of numbers, the "active window" (white boxes), and simple text explanations (e.g., "Target is larger, go right").
-* **Hidden (System Model):** The technical details of string parsing, integer division math, array memory management, and `try/except` error catching.
+* **Hidden (System Model):** The technical details of string parsing, index arithmetic, and `try/except` error catching.
 
 ### Algorithm Design
-The application follows a strict **Input $\rightarrow$ Process $\rightarrow$ Output** flow:
+The application follows a strict **Input $\rightarrow$ Process $\rightarrow$ Output** flow.
+
 * **Input:** User enters a comma-separated list and a target value.
-* **Process:** The app executes one binary search step at a time, updating indices.
-* **Output:** The visualization updates colors, and the log displays the decision logic.
+* **Processing:** The app executes binary search steps using the stored state (`low`, `high`, `mid`, etc.).
+* **Output:** The visualization and explanation text are updated with each step.
 
 **Session State (Gradio):**
-Crucially, I used `gr.State` to manage the application's memory.
-* **Why?** Standard functions "forget" variables after they run. Without state, the app would reset every time the user clicked "Next Step."
-* **What is stored?** The state dictionary holds the `list`, `low` index, `high` index, `mid` index, `found_index`, and `step_count`. This allows the app to resume exactly where it left off between button clicks.
+I used a state object (`gr.State`) to remember variables between button clicks. This is necessary because without it, the app would "forget" the current step every time the user clicked "Next Step".
+
+---
 
 # 5. Flowchart Diagram of the Algorithm
-The following flowchart illustrates the logic implemented in the application:
+The following flowchart illustrates the logical flow of the algorithm:
+
+
+[Image of Binary Search Flowchart Diagram]
+
 
 ```mermaid
 flowchart TD
@@ -106,6 +111,8 @@ flowchart TD
     Compare -- Mid > Target --> Right[Discard Right Half: High = Mid - 1] --> UpdateState
     
     UpdateState --> Wait
+
+<--
 
 
 # 6. Data Types and Structures
